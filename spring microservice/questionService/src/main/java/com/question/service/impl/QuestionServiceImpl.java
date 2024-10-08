@@ -54,11 +54,11 @@ public class QuestionServiceImpl implements QuestionService {
         if (!(question == null)) {
             response.setStatus("success");
             response.setData(questionRepositry.save(question));
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } else {
             response.setStatus("failure");
             response.setError("Could not create");
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
