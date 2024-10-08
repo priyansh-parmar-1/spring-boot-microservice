@@ -18,7 +18,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -124,5 +123,22 @@ class QuestionServiceImplTest {
         ResponseEntity<Response<Question>> responseEntity = questionService.deleteQuestionById(1L);
         assertEquals(HttpStatus.NOT_FOUND,responseEntity.getStatusCode());
         verify(questionRepositry,times(0)).deleteById(1L);
+    }
+
+    @Test
+    void testUpdateQuestionByIdSuccess(){
+        Optional<Question> questionOptional = Optional.of(new Question(1L,"test",1L));
+        when(questionRepositry.findById(1L)).thenReturn(questionOptional);
+        ResponseEntity<Response<Question>> responseEntity = questionService.updateQuestionById(1L, new Question(1L, "test@123", 1L));
+        assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
+        assertEquals("test@123",responseEntity.getBody().getData().getQuestion());
+    }
+
+    @Test
+    void testUpdateQuestionByIdFailure(){
+        Optional<Question> questionOptional = Optional.empty();
+        when(questionRepositry.findById(1L)).thenReturn(questionOptional);
+        ResponseEntity<Response<Question>> responseEntity = questionService.updateQuestionById(1L, new Question(1L, "test@123", 1L));
+        assertEquals(HttpStatus.NOT_FOUND,responseEntity.getStatusCode());
     }
 }
